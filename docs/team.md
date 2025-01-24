@@ -6,10 +6,10 @@ title:  Team
 # {{ page.title }}
 
 
-## USER 1
+## Andrew Ho
 ***UCI Net ID***: andrewzh
 
-## USER 2
+## Vincent Ngo
 ***UCI Net ID***: vnngo1
 
 ## USER 3

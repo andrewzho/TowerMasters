@@ -9,10 +9,7 @@ The **Collaborative Obstacle Tower Solver Using Multi-Agent Reinforcement Learni
 The system will take inputs such as the visual representation of the tower levels, agent states, and task-specific constraints. Outputs will include coordinated actions taken by multiple agents to progress through the tower efficiently. This project focuses on enabling agents to collaborate, generalize across unseen levels, and address challenges in multi-agent coordination and learning. Applications include training cooperative AI for dynamic problem-solving and generalizing solutions to real-world tasks requiring teamwork.
 
 ## AI/ML Algorithms
-The project will leverage the following algorithms:
-- **Proximal Policy Optimization (PPO)**: For training agents in continuous action spaces.
-- **Advantage Actor-Critic (A2C)**: To enable stable and efficient multi-agent learning.
-- **Experience Replay Buffers**: To improve learning stability by reusing past experiences.
+We anticipate using reinforcement learning with neural function approximators, specifically leveraging Proximal Policy Optimization (PPO) and Advantage Actor-Critic (A2C) methods. These algorithms will be model-free and primarily on-policy, enabling multi-agent collaboration and efficient policy learning in the Obstacle Tower environment.
 
 ## Evaluation Plan
 ### Quantitative Evaluation
@@ -29,12 +26,7 @@ The project will leverage the following algorithms:
 The moonshot goal is to develop agents capable of solving all levels of the Obstacle Tower environment while demonstrating highly efficient and human-like problem-solving capabilities.
 
 ## Meet the Instructor
-We plan to meet with the instructor no later than **Week 5** to discuss progress and gather feedback. The suggested earliest meeting date is **[Insert Date]**, ensuring that all teammates can attend.
+Plan to meet instructor week 5
 
 ## AI Tool Usage
-We will use the following tools and frameworks:
-- **Stable-Baselines3 or RLlib**: For implementing and training the reinforcement learning agents.
-- **Obstacle Tower API**: To simulate the environment and evaluate agent performance.
-- **Visualization Tools**: For analyzing agent behavior and collaboration strategies.
-
-All AI tools will be documented, including how they were used and their contributions to the project. We will critically assess the quality of AI-generated solutions and improve the system iteratively.
+TBD

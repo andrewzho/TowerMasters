@@ -40,5 +40,3 @@ We will use the following tools:
 All AI tools used will be documented, including their contributions to the project.
 
 ---
-
-This should now be **properly formatted** so you can copy and paste it directly into your document. 🚀 Let me know if you need any modifications!

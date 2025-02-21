@@ -3,6 +3,8 @@
 
 title:    'TowerMasters'
 subtitle: 'CS 175: Project in AI'
+description: Training RL agents to conquer Obstacle Tower
+theme: jekyll-theme-minimal
 
 
 #########################

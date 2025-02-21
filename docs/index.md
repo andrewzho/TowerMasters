@@ -23,7 +23,7 @@ Project Snapshot
 
 Here's a screenshot of our agent in action during training:
 
-![Agent Training](screenshot.png)
+![Agent Training](screenshot.jpg)
 
 Resources
 

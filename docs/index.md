@@ -7,7 +7,7 @@ Source code: (https://github.com/andrewzho/Group-14-oc-rl/tree/main)
 
 Reports:
 
-- [Proposal](proposal.html)
+- [Proposal](proposal.md)
 - [Status](status.html)
 - [Final](final.html)
 

@@ -31,7 +31,6 @@ We've relied on these key resources:
 - Obstacle Tower Environment: https://github.com/Unity-Technologies/obstacle-tower-env - The environment we're tackling.
 - Stable-Baselines3 Documentation: https://stable-baselines3.readthedocs.io/ - For our baseline PPO implementation.
 - PyTorch Documentation: https://pytorch.org/docs/stable/index.html - Core library for our custom PPO.
-- Grok by xAI: Used extensively for debugging and guidance throughout development.
 
 Stay tuned for our progress report in status.md!
 

@@ -11,26 +11,29 @@ Reports:
 - [Status](status.html)
 - [Final](final.html)
 
-What's Markdown (`.md`)?
+TowerMasters: Reinforcement Learning in Obstacle Tower
 
-Markdown is markup that lets you write hypertext (HTML) documents
-in easy-to-read and easy-to-write plain text.
-No angle brackets `<></>` required for
-paragraphs, lists, blockquotes, tables, etc.
+Welcome to TowerMasters, a CS 175 project where we train a reinforcement learning (RL) agent to navigate the Obstacle Tower environment using Proximal Policy Optimization (PPO). We aim to teach the agent to climb procedurally generated floors by implementing a custom PPO with frame stacking and reward shaping while comparing it to a Stable-Baselines3 baseline.
 
+Source Code Repository
 
-This is a paragraph (in Markdown). Some more
-text here.
+Our project code is hosted on GitHub: https://github.com/andrewzho/Group-14-oc-rl/tree/main. Check out src/train.py for our custom PPO and src/train2.py for the Stable-Baselines3 version.
 
-This is another paragraph.
+Project Snapshot
 
-This is a list:
+Here's a screenshot of our agent in action during training:
 
-- Orange
-- Apple
-- Blueberry
+![Agent Training](screenshot.png)
 
-$$x^2 = y^2$$
+Resources
+
+We've relied on these key resources:
+- Obstacle Tower Environment: https://github.com/Unity-Technologies/obstacle-tower-env - The environment we're tackling.
+- Stable-Baselines3 Documentation: https://stable-baselines3.readthedocs.io/ - For our baseline PPO implementation.
+- PyTorch Documentation: https://pytorch.org/docs/stable/index.html - Core library for our custom PPO.
+- Grok by xAI: Used extensively for debugging and guidance throughout development.
+
+Stay tuned for our progress report in status.md!
 
 
 Just getting started with Markdown?

@@ -3,7 +3,7 @@ layout: default
 title:  Home
 ---
 
-Source code: https://github.com/USER/PROJECT (_fix this_)
+Source code: [https://github.com/USER/PROJECT (_fix this_)](https://github.com/andrewzho/Group-14-oc-rl/tree/main)
 
 Reports:
 

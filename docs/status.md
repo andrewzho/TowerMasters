@@ -2,9 +2,9 @@
 layout: default
 title: Status
 ---
-<iframe width="560" height="315" src="https://www.youtube.com/embed/tzBmypUJL6Q" frameborder="0" allowfullscreen></iframe>
-
 # TowerTamers Project Status
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/tzBmypUJL6Q" frameborder="0" allowfullscreen></iframe>
 
 ## Project Summary
 

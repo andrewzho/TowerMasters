@@ -4,10 +4,14 @@ html {
   position: relative;
   min-height: 100%;
 }
+
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.6;
 }
+
 .footer {
   position: absolute;
   bottom: 0;
@@ -17,14 +21,11 @@ body {
   background-color: #f5f5f5;
 }
 
-
-/* Custom page CSS
--------------------------------------------------- */
-/* Not required for template or sticky footer method. */
-
+/* Container styling (optional) */
 body > .container {
   padding: 60px 15px 0;
 }
+
 .container .text-muted {
   margin: 20px 0;
 }
@@ -36,4 +37,106 @@ body > .container {
 
 code {
   font-size: 80%;
+}
+
+/* Minimal Banner / Header
+-------------------------------------------------- */
+.banner {
+  display: flex;
+  flex-wrap: wrap; /* Allows wrapping on small screens */
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f0f0f0; /* Light gray background */
+  padding: 30px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.banner-text {
+  flex: 1 1 300px;
+  margin-right: 20px;
+}
+
+.banner-text h1 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+.banner-text p {
+  margin-bottom: 1em;
+}
+
+.banner-image {
+  flex: 0 0 auto;
+  max-width: 300px; /* Adjust as desired */
+  margin-top: 10px;
+}
+
+.banner-image img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+/* Buttons
+-------------------------------------------------- */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 0.5em 0;
+  background-color: #007acc;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+  background-color: #005f99;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Images
+-------------------------------------------------- */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Additional Spacing and Headings
+-------------------------------------------------- */
+h1, h2, h3 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+/* Optional Navigation Styling
+-------------------------------------------------- */
+.navbar {
+  background-color: #007acc;
+  overflow: hidden;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #fff;
+  text-align: center;
+  padding: 14px 20px;
+  text-decoration: none;
+}
+
+.navbar a:hover {
+  background-color: #005f99;
+}
+
+/* Container for main content
+-------------------------------------------------- */
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
 }

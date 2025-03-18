@@ -170,162 +170,157 @@ Our experiments showed that this combined approach significantly outperformed th
 These enhancements built upon the PPO baseline led to significant improvements in the agent’s ability to successfully climb the Obstacle Tower Challenge.
 
 
-## Evaluation
 
-### Evaluation Setup
+# Evaluation
 
-We conducted a comprehensive evaluation of our approaches on the Obstacle Tower environment using both quantitative metrics and qualitative assessments. Our evaluation focused on measuring agent performance across several key dimensions:
+In this section, we present a comprehensive evaluation of our reinforcement learning approaches for the Obstacle Tower Environment. Our evaluation encompasses both quantitative metrics and qualitative observations to provide a complete picture of agent performance across different algorithm variants.
 
-1. **Floor Progression**: How many floors the agent can successfully complete
-2. **Episode Rewards**: Total rewards accumulated per episode
-3. **Sample Efficiency**: Learning speed relative to environment interactions
-4. **Generalization**: Performance on unseen procedurally generated levels
+## Evaluation Setup
 
-#### Quantitative Evaluation Setup
+### Environment Configuration
 
-For quantitative evaluation, we established the following protocol:
+All experiments were conducted on the Obstacle Tower Environment v3.0, using a consistent set of random seeds for reproducibility. We trained agents for up to 2,500 episodes, with the following environment parameters:
+- Difficulty level: Easy (initial setting) with progressive difficulty increases in curriculum learning
+- Observation space: RGB frames (84x84) plus auxiliary information (keys, time remaining)
+- Action space: Discrete 4-dimensional action vector representing movement, camera, and interaction
 
-- **Training Duration**: 1 million environment steps for each approach
-- **Evaluation Frequency**: Every 20,000 steps (50 evaluations total)
-- **Evaluation Episodes**: 5 episodes per evaluation point
-- **Seed Control**: Fixed seeds for evaluation to ensure fair comparison
-- **Metrics Tracked**: Mean reward, max floor reached, success rate, episode length
+### Algorithms and Variants
 
-We ran evaluations on two environment configurations:
-1. **Training Distribution**: Same procedural generation parameters as training
-2. **Test Distribution**: Held-out seeds with increased difficulty parameters
+We evaluated several algorithmic approaches:
 
-#### Hardware and Infrastructure
+1. **Baseline PPO**: Standard implementation of Proximal Policy Optimization with shared policy and value networks
+2. **Demo-Augmented PPO**: PPO enhanced with behavior cloning from human demonstrations
+3. **Curriculum Learning**: Progressive difficulty scaling as the agent improves performance
+4. **Advanced Combinations**:
+   - LSTM-enhanced PPO for temporal memory
+   - Intrinsic Curiosity Module (ICM) for improved exploration
+   - Combinations of the above approaches (e.g., Demo+Curriculum, LSTM+ICM+Curriculum)
 
-All experiments were conducted on:
-- NVIDIA RTX 3090 GPUs for primary experiments
-- Intel Xeon processors (16 cores) for CPU-based components
-- 32GB RAM per machine
-- Ubuntu 20.04 operating system
+### Metrics and Methodology
 
-### Quantitative Results
+Key performance metrics included:
+- **Reward**: Cumulative reward per episode
+- **Floor Progression**: Highest floor level reached
+- **Episode Length**: Duration of episodes in environment steps
+- **Policy and Value Losses**: Internal training metrics
+- **Entropy**: Policy randomness to measure exploration
+- **Action-specific metrics**: Door openings, key collections, etc.
 
-#### Floor Progression
+## Quantitative Results
 
-The primary metric for Obstacle Tower is the highest floor reached. Fig. 1 shows the progression of maximum floor reached during training:
+### Algorithm Performance Comparison
 
-[Figure 1: Line chart showing maximum floor reached vs. training steps for different approaches]
+[IMAGE: Algorithm performance comparison bar chart showing max floor, average floor, and average reward for different algorithms]
 
-| Approach | Max Floor (1M steps) | Time to Floor 5 (steps) |
-|---------|---------------------|-------------------------|
-| Vanilla PPO | 3.2 ± 0.7 | N/A (did not reach) |
-| SAC | 2.8 ± 0.5 | N/A (did not reach) |
-| LSTM-PPO | 5.3 ± 0.8 | 780K |
-| DemoPPO | 7.1 ± 1.2 | 320K |
-| LSTM+ICM | 6.4 ± 0.9 | 550K |
-| Full Approach | 10.2 ± 1.5 | 280K |
+The table below summarizes the performance of our primary algorithmic approaches:
 
-Our full approach (Recurrent-DemoPPO with ICM) significantly outperformed all baselines, reaching floor 10 within 1M steps. Notably, demonstration learning (DemoPPO) provided the most substantial individual improvement in floor progression.
+| Algorithm Variant | Max Floor | Avg Floor | Avg Reward | Max Reward | Sample Size |
+|-------------------|-----------|-----------|------------|------------|-------------|
+| PPO (baseline)    | 3.0       | 1.70      | 13.80      | 63.45      | 10 runs     |
+| Demo-based        | 3.0       | 1.73      | 27.19      | 64.38      | 22 runs     |
+| Curriculum        | 2.0       | 1.25      | 30.68      | 63.76      | 4 runs      |
 
-#### Learning Efficiency
+The data reveals several important trends:
 
-Fig. 2 displays the mean episode reward curves during training:
+1. **Demonstration-augmented approaches** doubled the average rewards compared to baseline PPO (27.19 vs 13.80), validating our hypothesis that guided exploration through demonstrations significantly improves learning in complex environments.
 
-[Figure 2: Learning curves showing mean episode reward vs. training steps]
+2. **Curriculum learning strategies** achieved the highest average rewards (30.68) among all approaches, suggesting that structured task progression leads to more robust policies, even though they showed more limited exploration (max floor 2.0).
 
-The data reveals several key insights:
-- Vanilla PPO and SAC exhibited slow, unstable learning
-- LSTM-PPO showed more stable learning but with slower initial progress
-- DemoPPO demonstrated rapid initial learning with plateauing at higher floors
-- The full approach maintained both fast initial learning and continued improvement
+3. **Maximum reward values** were similar across approaches (~63-64), indicating that all methods could occasionally achieve high performance, but the average performance differed substantially.
 
-#### Component Ablation Study
+### Learning Curves and Progression
 
-We conducted an ablation study to assess the contribution of each component:
+[IMAGE: Reward learning curves showing reward vs. episodes for different algorithm variants]
 
-| Component Configuration | Max Floor | Mean Reward | Sample Efficiency |
-|------------------------|-----------|-------------|-------------------|
-| Full Approach | 10.2 | 8.7 | 1.00× |
-| No LSTM | 6.9 | 5.3 | 0.68× |
-| No Demonstrations | 5.7 | 4.8 | 0.51× |
-| No ICM | 8.4 | 7.1 | 0.82× |
-| Vanilla PPO (no components) | 3.2 | 2.4 | 0.31× |
+The reward learning curves reveal critical differences in learning dynamics:
 
-Sample efficiency is normalized relative to the full approach, showing that each component contributes significantly to the overall performance, with demonstrations providing the largest individual improvement.
+- **Baseline PPO** showed unstable learning with high variance in rewards
+- **Demo-based approaches** achieved higher rewards earlier in training
+- **Curriculum learning** demonstrated the most stable improvement trajectory
 
-#### Generalization to Unseen Levels
+[IMAGE: Floor progression chart showing floor level reached vs. episodes]
 
-We evaluated generalization by testing on procedurally generated levels with unseen seeds:
+For floor progression, we observed:
 
-| Approach | Training Distribution | Test Distribution | Performance Gap |
-|----------|---------------------|------------------|----------------|
-| Vanilla PPO | 3.2 | 2.1 | -34.4% |
-| SAC | 2.8 | 1.9 | -32.1% |
-| LSTM-PPO | 5.3 | 4.2 | -20.8% |
-| DemoPPO | 7.1 | 5.4 | -23.9% |
-| Full Approach | 10.2 | 8.7 | -14.7% |
+- All approaches struggled to consistently advance beyond floor 3
+- Demo-based approaches reached higher floors earlier in training
+- LSTM+ICM combinations showed more consistent floor progression
 
-The full approach demonstrated substantially better generalization with only a 14.7% performance drop on unseen levels, compared to 34.4% for vanilla PPO. This suggests that our enhancements improved the agent's ability to adapt to novel environments.
+### Training Stability Analysis
 
-### Qualitative Analysis
+[IMAGE: Policy loss comparison chart]
 
-#### Visual Assessment of Agent Behavior
+[IMAGE: Value loss comparison chart]
 
-We analyzed agent behavior through recorded gameplay videos and identified several patterns:
+Policy and value loss trends provide insight into training stability:
 
-1. **Memory Utilization**: The LSTM-enhanced agent demonstrated clear memory-based behaviors:
-   - Returning to previously seen key locations
-   - Navigating to doors after collecting keys
-   - Avoiding revisiting already explored paths
+- **Demo-augmented approaches** showed lower initial policy losses, indicating that behavior cloning provided a strong starting point
+- **Curriculum learning** maintained more stable value loss, suggesting better estimation of expected returns
+- **LSTM variants** showed higher initial losses but more stable convergence over time
 
-2. **Exploration Patterns**: Heat maps of agent positions revealed distinct exploration strategies:
-   - Vanilla PPO: Concentrated exploration in starting areas
-   - ICM-enhanced: More uniform coverage of levels
-   - Full approach: Strategic exploration with focus on relevant areas
+## Qualitative Analysis
 
-3. **Puzzle Solving**: Through frame-by-frame analysis, we observed the agent's puzzle-solving capabilities:
-   - Successfully recognizing key-door relationships
-   - Learning to avoid obstacles after initial failures
-   - Timing jumps and movements with increasing precision at higher floors
+### Observation of Agent Behaviors
 
-#### Failure Mode Analysis
+Through qualitative evaluation of agent gameplay, we identified several notable behavior patterns:
 
-We categorized and quantified failure modes to identify remaining challenges:
+1. **Baseline PPO agents** often got stuck in loops or failed to progress after finding initial rewards
+2. **Demo-augmented agents** showed more purposeful exploration and better key-door navigation
+3. **LSTM+ICM agents** exhibited improved memory-based behaviors, such as returning to previously seen keys
 
-| Failure Mode | Vanilla PPO | Full Approach |
-|--------------|-------------|--------------|
-| Time expiration | 42% | 13% |
-| Falls | 31% | 22% |
-| Stuck in loops | 18% | 5% |
-| Missed keys | 9% | 47% |
-| Other | 0% | 13% |
+[IMAGE: Screenshots showing example agent behaviors in representative scenarios]
 
-The full approach shifted failure modes from basic navigation issues to higher-level planning problems, such as finding all keys in complex levels. This indicates significant progress but highlights remaining challenges in complex reasoning.
+### Exploration Strategies
 
-### Computational Efficiency
+We analyzed exploration patterns across different algorithm variants:
 
-We also evaluated the computational requirements of each approach:
+- **ICM-enhanced agents** showed significantly more consistent exploration of unseen areas
+- **Demo agents** efficiently navigated familiar room layouts but sometimes struggled with novel configurations
+- **Curriculum agents** demonstrated better adaptation to increasing difficulty compared to fixed-difficulty training
 
-| Approach | Training Time (1M steps) | Memory Usage | Inference FPS |
-|----------|-------------------------|--------------|--------------|
-| Vanilla PPO | 8.5 hours | 2.1 GB | 124 |
-| SAC | 10.2 hours | 2.8 GB | 98 |
-| LSTM-PPO | 12.7 hours | 3.4 GB | 97 |
-| DemoPPO | 10.3 hours | 2.6 GB | 115 |
-| Full Approach | 15.2 hours | 4.2 GB | 76 |
+### Failure Modes
 
-While our full approach requires approximately 80% more training time than vanilla PPO, the performance gains justify this increased computational cost. The inference speed of 76 FPS remains well above the 30 FPS required for real-time operation.
+Common failure patterns included:
 
-### Summary of Findings
+1. Repetitive actions when faced with obstacles
+2. Inefficient backtracking in maze-like environments
+3. Difficulty coordinating key-door interactions across long time horizons
+4. Struggle with precise platform jumping, particularly on higher floors
 
-Our evaluation demonstrates that:
+## Discussion and Interpretation
 
-1. The full approach (Recurrent-DemoPPO with ICM) achieved the best performance, reaching higher floors with greater consistency than any other approach.
+### Effectiveness of Demonstration Learning
 
-2. Each component provides a significant contribution to overall performance, with demonstration learning offering the largest individual impact on sample efficiency.
+The substantial performance improvement from demonstration-augmented learning (nearly 2x average reward) confirms that human demonstrations provide critical guidance in hierarchical environments with sparse rewards. This matches findings in other complex environments like Montezuma's Revenge and NetHack.
 
-3. The LSTM component was critical for solving higher floors that require memory and planning, while ICM significantly improved exploration of novel states.
+### Memory and Exploration Tradeoffs
 
-4. The full approach showed better generalization to unseen environments, with only a 14.7% performance drop compared to 34.4% for vanilla PPO.
+The LSTM and ICM components showed complementary benefits:
+- LSTM improved performance in scenarios requiring memory of previous observations
+- ICM enhanced exploration in novel environments
+- Combined LSTM+ICM approaches achieved the most robust performance across different floor layouts
 
-5. Qualitative analysis revealed that the enhanced agent developed sophisticated behaviors including memory utilization, strategic exploration, and basic puzzle solving.
+### Limitations and Challenges
 
-These results validate our approach and demonstrate significant progress toward solving the challenging Obstacle Tower environment. The combination of recurrent memory, demonstration learning, and intrinsic motivation effectively addresses the core challenges of exploration, memory, and sample efficiency.
+Despite our best approaches reaching floor 3, several challenges limited further progression:
+
+1. **Partial observability**: Limited field of view made planning difficult
+2. **Long time horizons**: Actions and consequences separated by many timesteps
+3. **Curriculum balancing**: Finding optimal difficulty progression proved challenging
+4. **Demonstration quality**: Our demonstration dataset had limited coverage of higher floors
+
+## Conclusion and Future Directions
+
+Our evaluation demonstrates that combining demonstrations, memory mechanisms, and intrinsic motivation significantly improves performance in the Obstacle Tower Environment. The demo-augmented approaches doubled average reward compared to baseline PPO, while curriculum learning provided the most stable learning trajectory.
+
+For future work, we identify several promising directions:
+1. Collecting more demonstrations from higher floors
+2. Developing adaptive curriculum strategies based on agent performance
+3. Exploring hierarchical reinforcement learning approaches to better handle long-time dependencies
+4. Investigating alternative memory architectures for improved long-term planning
+
+[IMAGE: Final performance comparison showing the best runs from each approach]
+
 
 
 ## References

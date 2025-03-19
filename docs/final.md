@@ -389,10 +389,6 @@ For this project, we used AI tools in the following ways:
 
 1. Code Generation: We used GitHub Copilot to help with implementation details of the algorithms, particularly for boilerplate code and common reinforcement learning patterns.
 
-2. Debugging: We used ChatGPT to help debug implementation issues with the LSTM integration and the Intrinsic Curiosity Module.
-
-3. Report Structure: We used ChatGPT to help organize the structure of this final report based on our implementation notes and results.
-
-4. Literature Review: We used ChatGPT to help summarize related work in reinforcement learning for procedurally generated environments.
+2. Debugging: We used ChatGPT to help debug implementation issues with the LSTM integration and the Intrinsic Curiosity Module..
 
 No AI tools were used for the core algorithm design, the evaluation of the results, or the interpretation of the findings, which were entirely our own work.

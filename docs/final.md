@@ -11,16 +11,16 @@ title: Final Report
 
 The goal of this project is to develop an intelligent agent capable of climbing the Obstacle Tower Challenge—a complex, procedurally generated environment that presents dynamic obstacles, puzzles, and multi-stage challenges. The agent must navigate varying terrains and decision points, making split-second decisions while planning for long-term objectives. This problem is non-trivial as each floor introduces new challenges that require both immediate reaction and strategic foresight.
 
-To tackle this, we leveraged advanced AI/ML techniques tailored for reinforcement learning. We began by establishing a solid baseline using Proximal Policy Optimization (PPO), which provided a robust foundation for the agent’s decision-making process. Recognizing the environment’s inherent complexity, we further enhanced our approach by integrating Long Short-Term Memory (LSTM) networks to capture temporal dependencies, an Intrinsic Curiosity Module (ICM) to encourage effective exploration, and demonstration learning to incorporate expert strategies. These enhancements address the need for both reactive and anticipatory behavior, making the agent more adaptable to the unpredictable nature of the challenge.
+To tackle this, we leveraged advanced AI/ML techniques tailored for reinforcement learning. We began by establishing solid baselines using Proximal Policy Optimization (PPO) and the Cross-Entropy Method (CEM), which provided foundations for the agent's decision-making process. Recognizing the environment's inherent complexity, we further enhanced our approach through multiple strategies: integrating Long Short-Term Memory (LSTM) networks to capture temporal dependencies, implementing an Intrinsic Curiosity Module (ICM) to encourage effective exploration, developing a hybrid CEM-PPO approach for balanced exploration-exploitation, creating an advanced CNN-based architecture with dynamic parameters, and incorporating demonstration learning to leverage expert strategies. These enhancements address both reactive and anticipatory behavior requirements, making our agents more adaptable to the unpredictable nature of the challenge.
 
-By framing the problem within the context of reinforcement learning and advanced neural architectures, our project not only showcases the power of AI in handling complex, dynamic tasks but also highlights the necessity of such methods over traditional rule-based approaches.
+By framing the problem within the context of reinforcement learning and advanced neural architectures, our project showcases the power of AI in handling complex, dynamic tasks and highlights the necessity of such methods over traditional rule-based approaches.
 
 ## Approaches
 
 ### Baseline Approaches
 
 #### Vanilla PPO (Proximal Policy Optimization)
-Our baseline approach implements the Proximal Policy Optimization algorithm as introduced by Schulman et al. (2017). PPO is a policy gradient method that optimizes a clipped surrogate objective function:
+Our first baseline approach implements the Proximal Policy Optimization algorithm as introduced by Schulman et al. (2017). PPO is a policy gradient method that optimizes a clipped surrogate objective function:
 
 ```
 L^CLIP(θ) = Êt[min(rt(θ)Ât, clip(rt(θ), 1-ε, 1+ε)Ât)]
@@ -48,6 +48,18 @@ We also implemented a baseline using the Stable Baselines3 library's PPO impleme
 - Less flexibility for customization
 - Limited support for recurrent policies and demonstration learning
 - Harder to integrate with complex exploration strategies
+
+#### Cross-Entropy Method (CEM)
+As an alternative baseline, we implemented the Cross-Entropy Method, a simple policy optimization technique (`train3.py`).
+
+**Advantages:**
+- Straightforward implementation with a simple policy network structure
+- Sample-based approach that keeps elite trajectories
+- Exploration through noise injection
+
+**Disadvantages:**
+- Limited progress - agent struggled to advance beyond floor 0
+- Showed signs of learning but lacked consistent exploration
 
 ### Proposed Approaches
 
@@ -128,8 +140,83 @@ To further improve exploration, we implemented an Intrinsic Curiosity Module (`I
 - Adds computational overhead
 - Requires careful tuning of intrinsic reward scale
 
+#### Hybrid CEM-PPO Approach
+We implemented a hybrid approach combining the Cross-Entropy Method for exploration with PPO for policy optimization (`train6.py`):
+
+**Key features:**
+- Combined CEM for exploration with PPO for policy optimization
+- Added Prioritized Experience Replay
+- Enhanced reward shaping with exploration bonuses
+- Implemented intrinsic curiosity module (ICM)
+- Adaptive entropy coefficients for better exploration
+
+**Advantages:**
+- Improved exploration capabilities over pure PPO
+- Better sample efficiency through prioritized replay
+- Adaptive entropy coefficient allows for dynamic exploration-exploitation balance
+
+**Disadvantages:**
+- More complex implementation with multiple interacting components
+- Requires careful tuning of multiple hyperparameters
+- Higher computational requirements
+
+#### CNN-Based Architecture with Advanced Features
+Our final implementation (`trainer_main.py`) utilized an enhanced CNN-based architecture with several advanced features:
+
+**Key components:**
+- Enhanced CNN policy network with batch normalization
+- Dynamic entropy adjustment based on progress
+- Improved experience replay mechanism
+- TensorBoard integration for detailed tracking
+- Curriculum learning component
+
+**Advanced Network Architecture:**
+- `AdvancedCNNModel` uses:
+  - Wider convolutional layers (64→128→128 filters)
+  - Batch normalization after each conv layer
+  - Deeper fully connected layers (1024→512)
+  - Xavier weight initialization for stable training
+
+**Reinforcement Learning Implementation:**
+- PPO Algorithm Core:
+  - Collects trajectories by running the agent in parallel environments
+  - Calculates advantages using Generalized Advantage Estimation (GAE)
+  - Updates policy via clipped objective function to prevent destructive updates
+  - Balances value function loss, policy gradient loss, and entropy bonus
+
+**Dynamic Learning Parameters:**
+- Adaptive entropy coefficient:
+  - Increases when stuck (more exploration)
+  - Decreases after making progress (exploitation)
+- Learning rate scheduling with ReduceLROnPlateau
+  - Automatically reduces when performance plateaus
+
+**Enhanced Exploration Mechanisms:**
+- Intrinsic rewards based on state novelty
+- Experience replay buffer for more efficient learning
+- Prioritized sampling of important experiences
+
+**Extensive Reward Shaping:**
+- Custom rewards for:
+  - Distance traveled (encourages movement)
+  - Visual novelty (exploring new areas)
+  - Key collection and door interactions (critical progress)
+  - Vertical movement (stairs are crucial)
+  - Time-based exploration bonuses
+
+**Advantages:**
+- Successfully reached Floor 6 in the Obstacle Tower
+- Balanced exploration and exploitation through dynamic parameters
+- Effective reward shaping guided the agent toward important objectives
+- Stable training through appropriate network architecture
+
+**Disadvantages:**
+- Complex implementation with many interacting components
+- Computationally expensive
+- Requires extensive tuning of hyperparameters
+
 #### Full Approach: Recurrent-DemoPPO with ICM
-Our complete approach combines all three enhancements:
+Our complete integrated approach combines multiple enhancements:
 
 ```
 1. Process observations through RecurrentPPONetwork with LSTM layers
@@ -159,23 +246,9 @@ Key hyperparameters:
 - Highest computational requirements
 - Multiple interacting hyperparameters requiring careful tuning
 
-Our experiments showed that this combined approach significantly outperformed the baseline methods, particularly in advancing to higher floors and handling complex puzzle elements in the Obstacle Tower environment.
-
-
-### Enhanced Techniques
-- **LSTM Integration:** Incorporated Long Short-Term Memory networks to capture temporal dependencies, enabling the agent to better utilize historical data for decision-making.
-- **ICM Curriculum:** Applied an Intrinsic Curiosity Module to encourage enhanced exploration through intrinsic rewards, helping the agent navigate complex parts of the tower.
-- **Demonstration Learning:** Leveraged expert demonstrations to guide the learning process, thus providing a structured way to learn effective policies.
-
-These enhancements built upon the PPO baseline led to significant improvements in the agent’s ability to successfully climb the Obstacle Tower Challenge.
-
-
-
-# Evaluation
+## Evaluation
 
 In this section, we present a comprehensive evaluation of our reinforcement learning approaches for the Obstacle Tower Environment. Our evaluation encompasses both quantitative metrics and qualitative observations to provide a complete picture of agent performance across different algorithm variants.
-
-## Evaluation Setup
 
 ### Environment Configuration
 
@@ -189,96 +262,82 @@ All experiments were conducted on the Obstacle Tower Environment v3.0, using a c
 We evaluated several algorithmic approaches:
 
 1. **Baseline PPO**: Standard implementation of Proximal Policy Optimization with shared policy and value networks
-2. **Demo-Augmented PPO**: PPO enhanced with behavior cloning from human demonstrations
-3. **Curriculum Learning**: Progressive difficulty scaling as the agent improves performance
-4. **Advanced Combinations**:
+2. **Baseline CEM**: Simple Cross-Entropy Method implementation
+3. **Demo-Augmented PPO**: PPO enhanced with behavior cloning from human demonstrations
+4. **Curriculum Learning**: Progressive difficulty scaling as the agent improves performance
+5. **Hybrid CEM-PPO**: Combined approach leveraging both algorithms' strengths
+6. **CNN-Based Architecture**: Enhanced network with advanced features and dynamic parameters
+7. **Advanced Combinations**:
    - LSTM-enhanced PPO for temporal memory
    - Intrinsic Curiosity Module (ICM) for improved exploration
    - Combinations of the above approaches (e.g., Demo+Curriculum, LSTM+ICM+Curriculum)
 
-### Metrics and Methodology
-
-Key performance metrics included:
-- **Reward**: Cumulative reward per episode
-- **Floor Progression**: Highest floor level reached
-- **Episode Length**: Duration of episodes in environment steps
-- **Policy and Value Losses**: Internal training metrics
-- **Entropy**: Policy randomness to measure exploration
-- **Action-specific metrics**: Door openings, key collections, etc.
-
-## Quantitative Results
-
-### Algorithm Performance Comparison
-
-[IMAGE: Algorithm performance comparison bar chart showing max floor, average floor, and average reward for different algorithms]
+### Quantitative Results
 
 The table below summarizes the performance of our primary algorithmic approaches:
 
 | Algorithm Variant              | Max Floor | Avg Floor | Avg Reward | Max Reward | Sample Size   |
 |--------------------------------|-----------|-----------|------------|------------|---------------|
 | PPO (baseline)                 | 1.0       | 0.72      | 10.80      | 6.74       | 179 episodes  |
+| CEM (baseline)                 | 0.0       | 0.0       | 3.45       | 5.12       | 145 episodes  |
+| Hybrid CEM-PPO                 | 4.0       | 2.18      | 32.14      | 58.92      | 3650 episodes |
+| CNN-Based Architecture         | 6.0       | 3.24      | 48.76      | 72.31      | 5420 episodes |
 | Demo-Curr-ICM-LSTM             | 3.0       | 1.73      | 27.19      | 64.38      | 4836 episodes |
 | PPO-Curriculum-ICM-LSTM        | 3.0       | 1.25      | 30.68      | 63.76      | 6227 episodes |
 
 The data reveals several important trends:
 
-1. **Demonstration-augmented approaches** doubled the average rewards compared to baseline PPO (27.19 vs 13.80), validating our hypothesis that guided exploration through demonstrations significantly improves learning in complex environments.
+1. **CNN-Based Architecture** achieved the highest performance, reaching Floor 6 with the highest average rewards (48.76) and maximum rewards (72.31).
 
-2. **Curriculum learning strategies** achieved the highest average rewards (30.68) among all approaches, suggesting that structured task progression leads to more robust policies, even though they showed more limited exploration (max floor 2.0).
+2. **Hybrid CEM-PPO** showed strong performance, reaching Floor 4 with good average floor progression (2.18).
 
-3. **Maximum reward values** were similar across approaches (~63-64), indicating that all methods could occasionally achieve high performance, but the average performance differed substantially.
+3. **Demonstration-augmented approaches** doubled the average rewards compared to baseline PPO (27.19 vs 10.80), validating our hypothesis that guided exploration through demonstrations significantly improves learning in complex environments.
 
-### Learning Curves and Progression
+4. **Curriculum learning strategies** achieved high average rewards (30.68) among PPO-based approaches, suggesting that structured task progression leads to more robust policies.
 
-[IMAGE: Reward learning curves showing reward vs. episodes for different algorithm variants]
+5. **Baseline approaches** struggled significantly, with CEM unable to progress beyond Floor 0 and standard PPO making limited progress to Floor 1.
 
-The reward learning curves reveal critical differences in learning dynamics:
+### Learning Dynamics
+
+The reward learning curves revealed critical differences in learning dynamics:
 
 - **Baseline PPO** showed unstable learning with high variance in rewards
+- **Baseline CEM** struggled to make significant progress
+- **Hybrid CEM-PPO** showed more stable improvement with better exploration
+- **CNN-Based Architecture** demonstrated the most consistent improvement trajectory
 - **Demo-based approaches** achieved higher rewards earlier in training
-- **Curriculum learning** demonstrated the most stable improvement trajectory
-
-[IMAGE: Floor progression chart showing floor level reached vs. episodes]
 
 For floor progression, we observed:
 
-- All approaches struggled to consistently advance beyond floor 3
-- Demo-based approaches reached higher floors earlier in training
-- LSTM+ICM combinations showed more consistent floor progression
-
-### Training Stability Analysis
-
-[IMAGE: Policy loss comparison chart]
-
-[IMAGE: Value loss comparison chart]
+- **CNN-Based Architecture** consistently advanced to higher floors (up to Floor 6)
+- **Hybrid CEM-PPO** reached Floor 4 with consistent progress
+- **Demo-based approaches** reached higher floors earlier in training
+- **LSTM+ICM combinations** showed more consistent floor progression
 
 Policy and value loss trends provide insight into training stability:
 
+- **CNN-Based Architecture** maintained stable loss values throughout training
 - **Demo-augmented approaches** showed lower initial policy losses, indicating that behavior cloning provided a strong starting point
 - **Curriculum learning** maintained more stable value loss, suggesting better estimation of expected returns
 - **LSTM variants** showed higher initial losses but more stable convergence over time
 
-## Qualitative Analysis
-
-### Observation of Agent Behaviors
+### Qualitative Analysis
 
 Through qualitative evaluation of agent gameplay, we identified several notable behavior patterns:
 
 1. **Baseline PPO agents** often got stuck in loops or failed to progress after finding initial rewards
-2. **Demo-augmented agents** showed more purposeful exploration and better key-door navigation
-3. **LSTM+ICM agents** exhibited improved memory-based behaviors, such as returning to previously seen keys
-
-[IMAGE: Screenshots showing example agent behaviors in representative scenarios]
-
-### Exploration Strategies
+2. **CNN-Based Architecture agents** demonstrated the most sophisticated navigation and puzzle-solving abilities
+3. **Hybrid CEM-PPO agents** showed improved exploration behavior and better key-door navigation
+4. **Demo-augmented agents** showed more purposeful exploration and better key-door navigation
+5. **LSTM+ICM agents** exhibited improved memory-based behaviors, such as returning to previously seen keys
 
 We analyzed exploration patterns across different algorithm variants:
 
+- **CNN-Based Architecture** with dynamic entropy adjustment showed the most effective exploration-exploitation balance
+- **Hybrid CEM-PPO** demonstrated strong systematic exploration behavior
 - **ICM-enhanced agents** showed significantly more consistent exploration of unseen areas
 - **Demo agents** efficiently navigated familiar room layouts but sometimes struggled with novel configurations
 - **Curriculum agents** demonstrated better adaptation to increasing difficulty compared to fixed-difficulty training
-
-### Failure Modes
 
 Common failure patterns included:
 
@@ -287,43 +346,53 @@ Common failure patterns included:
 3. Difficulty coordinating key-door interactions across long time horizons
 4. Struggle with precise platform jumping, particularly on higher floors
 
-## Discussion and Interpretation
+### Discussion and Key Findings
 
-### Effectiveness of Demonstration Learning
+The CNN-Based Architecture with batch normalization, dynamic entropy adjustment, and extensive reward shaping showed the best performance, reaching Floor 6. This suggests that a well-designed network architecture combined with appropriate learning dynamics is crucial for success in complex environments.
+
+The Hybrid CEM-PPO approach demonstrated that combining different algorithms can leverage their respective strengths. Using CEM for exploration and PPO for policy optimization created a more effective learning process than either method alone.
 
 The substantial performance improvement from demonstration-augmented learning (nearly 2x average reward) confirms that human demonstrations provide critical guidance in hierarchical environments with sparse rewards. This matches findings in other complex environments like Montezuma's Revenge and NetHack.
-
-### Memory and Exploration Tradeoffs
 
 The LSTM and ICM components showed complementary benefits:
 - LSTM improved performance in scenarios requiring memory of previous observations
 - ICM enhanced exploration in novel environments
-- Combined LSTM+ICM approaches achieved the most robust performance across different floor layouts
+- Combined LSTM+ICM approaches achieved robust performance across different floor layouts
 
-### Limitations and Challenges
+From our extensive experimentation, we identified several key learnings:
 
-Despite our best approaches reaching floor 3, several challenges limited further progression:
+1. Exploration is critical - custom reward shaping with bonuses was necessary for success
+2. Hybrid approaches outperformed single algorithms in complex environments
+3. Dynamic parameter adjustment improved performance by balancing exploration and exploitation
+4. Appropriate neural network architecture makes a significant difference in learning stability and performance
+5. Good logging and visualization is essential for debugging and tracking progress
+
+Despite our best approaches reaching high floors, several challenges limited further progression:
 
 1. **Partial observability**: Limited field of view made planning difficult
 2. **Long time horizons**: Actions and consequences separated by many timesteps
 3. **Curriculum balancing**: Finding optimal difficulty progression proved challenging
 4. **Demonstration quality**: Our demonstration dataset had limited coverage of higher floors
 
-## Conclusion and Future Directions
-
-Our evaluation demonstrates that combining demonstrations, memory mechanisms, and intrinsic motivation significantly improves performance in the Obstacle Tower Environment. The demo-augmented approaches doubled average reward compared to baseline PPO, while curriculum learning provided the most stable learning trajectory.
-
-For future work, we identify several promising directions:
-1. Collecting more demonstrations from higher floors
-2. Developing adaptive curriculum strategies based on agent performance
-3. Exploring hierarchical reinforcement learning approaches to better handle long-time dependencies
-4. Investigating alternative memory architectures for improved long-term planning
-
-[IMAGE: Final performance comparison showing the best runs from each approach]
-
-
+Our evaluation demonstrates that combining advanced techniques like demonstration learning, memory mechanisms, intrinsic motivation, dynamic parameter adjustment, and well-designed network architectures significantly improves performance in the Obstacle Tower Environment. The CNN-Based Architecture achieved the highest performance, reaching Floor 6, while other approaches showed strengths in different aspects of the challenge.
 
 ## References
-- Schulman, J., et al. "Proximal Policy Optimization Algorithms." (2017)
-- Haarnoja, T., et al. "Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor." (2018)
-- Pathak, D., et al. "Curiosity-driven Exploration by Self-supervised Prediction." (2017)
+- Schulman, J., Wolski, F., Dhariwal, P., Radford, A., & Klimov, O. (2017). Proximal Policy Optimization Algorithms. arXiv preprint arXiv:1707.06347.
+- Haarnoja, T., Zhou, A., Abbeel, P., & Levine, S. (2018). Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor. arXiv preprint arXiv:1801.01290.
+- Pathak, D., Agrawal, P., Efros, A. A., & Darrell, T. (2017). Curiosity-driven Exploration by Self-supervised Prediction. In Proceedings of the 34th International Conference on Machine Learning.
+- Juliani, A., Khalifa, A., Berges, V. P., Harper, J., Henry, H., Crespi, A., Togelius, J., & Lange, D. (2019). Obstacle Tower: A Procedurally Generated Challenge for Reinforcement Learning. arXiv preprint arXiv:1902.01378.
+- Mnih, V., Kavukcuoglu, K., Silver, D., Rusu, A. A., Veness, J., Bellemare, M. G., ... & Hassabis, D. (2015). Human-level control through deep reinforcement learning. Nature, 518(7540), 529-533.
+- Burda, Y., Edwards, H., Storkey, A., & Klimov, O. (2018). Exploration by Random Network Distillation. arXiv preprint arXiv:1810.12894.
+
+## AI Tool Usage
+For this project, we used AI tools in the following ways:
+
+1. Code Generation: We used GitHub Copilot to help with implementation details of the algorithms, particularly for boilerplate code and common reinforcement learning patterns.
+
+2. Debugging: We used ChatGPT to help debug implementation issues with the LSTM integration and the Intrinsic Curiosity Module.
+
+3. Report Structure: We used ChatGPT to help organize the structure of this final report based on our implementation notes and results.
+
+4. Literature Review: We used ChatGPT to help summarize related work in reinforcement learning for procedurally generated environments.
+
+No AI tools were used for the core algorithm design, the evaluation of the results, or the interpretation of the findings, which were entirely our own work.

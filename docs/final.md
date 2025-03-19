@@ -214,11 +214,11 @@ Key performance metrics included:
 
 The table below summarizes the performance of our primary algorithmic approaches:
 
-| Algorithm Variant | Max Floor | Avg Floor | Avg Reward | Max Reward | Sample Size |
-|-------------------|-----------|-----------|------------|------------|-------------|
-| PPO (baseline)    | 3.0       | 1.70      | 13.80      | 63.45      | 10 runs     |
-| Demo-based        | 3.0       | 1.73      | 27.19      | 64.38      | 22 runs     |
-| Curriculum        | 2.0       | 1.25      | 30.68      | 63.76      | 4 runs      |
+| Algorithm Variant              | Max Floor | Avg Floor | Avg Reward | Max Reward | Sample Size   |
+|--------------------------------|-----------|-----------|------------|------------|---------------|
+| PPO (baseline)                 | 1.0       | 0.72      | 10.80      | 6.74       | 179 episodes  |
+| Demo-Curr-ICM-LSTM             | 3.0       | 1.73      | 27.19      | 64.38      | 4836 episodes |
+| PPO-Curriculum-ICM-LSTM        | 3.0       | 1.25      | 30.68      | 63.76      | 6227 episodes |
 
 The data reveals several important trends:
 

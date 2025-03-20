@@ -16,8 +16,8 @@ title: Home
 
 ## Reports
 - [Proposal](proposal.md)
-- [Status](status.html)
-- [Final](final.html)
+- [Status](status.md)
+- [Final](final.md)
 
 ---
 

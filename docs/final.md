@@ -5,7 +5,7 @@ title: Final Report
 
 ## Video
 <!-- Embed your project video here. The video should be under three minutes, at least 720p, and include a brief problem description, baseline performance, and your best run demonstration. -->
-<iframe width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/GIpRLXmLu6M" frameborder="0" allowfullscreen></iframe>
 
 ## Project Summary
 
@@ -319,6 +319,20 @@ Policy and value loss trends provide insight into training stability:
 - **Demo-augmented approaches** showed lower initial policy losses, indicating that behavior cloning provided a strong starting point
 - **Curriculum learning** maintained more stable value loss, suggesting better estimation of expected returns
 - **LSTM variants** showed higher initial losses but more stable convergence over time
+
+Here are some visuals for displaying our results
+
+![PPO vs Custom PPOs](PPO_vs_Custom.png)
+*Figure 1: Episode rewards for PPO and custom PPO variants, with Custom hiting 3 floors max and Vanila PPO staying at floor 1.*
+
+![CEM + PPO Variant](CEM+PPO.png)
+*Figure 1: Episode rewards for CEM (Cross-Entropy Method) combined with PPO variant hitting floor 4 max.*
+
+![CNN PPO Variant](CNN_PPO.png)
+*Figure 1: Episode rewards for PPO with a CNN (Convolutional Neural Network) variant, hitting a floor 6 max.*
+
+![Comparison Hybrid](Comparison_Hybrid.png)
+*Figure 1: Comparison between the CEM+PPO and CNN PPO, our 2 hybrid approaches.*
 
 ### Qualitative Analysis
 

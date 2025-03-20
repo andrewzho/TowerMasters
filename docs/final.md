@@ -283,7 +283,6 @@ The table below summarizes the performance of our primary algorithmic approaches
 | Hybrid CEM-PPO                 | 4.0       | 2.18      | 32.14      | 58.92      | 3650 episodes |
 | CNN-Based Architecture         | 6.0       | 3.24      | 48.76      | 72.31      | 5420 episodes |
 | Demo-Curr-ICM-LSTM             | 3.0       | 1.73      | 27.19      | 64.38      | 4836 episodes |
-| PPO-Curriculum-ICM-LSTM        | 3.0       | 1.25      | 30.68      | 63.76      | 6227 episodes |
 
 The data reveals several important trends:
 

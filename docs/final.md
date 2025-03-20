@@ -160,6 +160,48 @@ We implemented a hybrid approach combining the Cross-Entropy Method for explorat
 - Requires careful tuning of multiple hyperparameters
 - Higher computational requirements
 
+#### Full Approach: Recurrent-DemoPPO with ICM
+Our complete integrated approach combines multiple enhancements:
+
+```
+1. Process observations through RecurrentPPONetwork with LSTM layers
+2. Update policy using demonstration data with behavior cloning loss
+3. Generate intrinsic rewards using ICM for enhanced exploration
+4. Total loss function:
+   L_total = L_PPO + λ_BC * L_BC + (L_forward + L_inverse)_ICM
+```
+
+Key hyperparameters:
+- LSTM hidden size: 256
+- Sequence length for recurrent training: 16
+- Demonstration batch size: 64
+- Behavior cloning weight: 0.1 (annealed over time)
+- ICM reward scale: 0.01
+
+**Advantages:**
+- Comprehensive solution addressing all major challenges:
+  - Memory (LSTM)
+  - Exploration (ICM)
+  - Sample efficiency (demonstrations)
+- Strongest performance on higher floors with complex puzzles
+- Better generalization to unseen procedural layouts
+
+**Disadvantages:**
+- Most complex implementation requiring careful integration of components
+- Highest computational requirements
+- Multiple interacting hyperparameters requiring careful tuning
+
+## Evaluation
+
+In this section, we present a comprehensive evaluation of our reinforcement learning approaches for the Obstacle Tower Environment. Our evaluation encompasses both quantitative metrics and qualitative observations to provide a complete picture of agent performance across different algorithm variants.
+
+### Environment Configuration
+
+All experiments were conducted on the Obstacle Tower Environment v3.0, using a consistent set of random seeds for reproducibility. We trained agents for up to 2,500 episodes, with the following environment parameters:
+- Difficulty level: Easy (initial setting) with progressive difficulty increases in curriculum learning
+- Observation space: RGB frames (84x84) plus auxiliary information (keys, time remaining)
+- Action space: Discrete 4-dimensional action vector representing movement, camera, and interaction
+  
 #### CNN-Based Architecture with Advanced Features
 Our final implementation (`trainer_main.py`) utilized an enhanced CNN-based architecture with several advanced features:
 
@@ -214,48 +256,6 @@ Our final implementation (`trainer_main.py`) utilized an enhanced CNN-based arch
 - Complex implementation with many interacting components
 - Computationally expensive
 - Requires extensive tuning of hyperparameters
-
-#### Full Approach: Recurrent-DemoPPO with ICM
-Our complete integrated approach combines multiple enhancements:
-
-```
-1. Process observations through RecurrentPPONetwork with LSTM layers
-2. Update policy using demonstration data with behavior cloning loss
-3. Generate intrinsic rewards using ICM for enhanced exploration
-4. Total loss function:
-   L_total = L_PPO + λ_BC * L_BC + (L_forward + L_inverse)_ICM
-```
-
-Key hyperparameters:
-- LSTM hidden size: 256
-- Sequence length for recurrent training: 16
-- Demonstration batch size: 64
-- Behavior cloning weight: 0.1 (annealed over time)
-- ICM reward scale: 0.01
-
-**Advantages:**
-- Comprehensive solution addressing all major challenges:
-  - Memory (LSTM)
-  - Exploration (ICM)
-  - Sample efficiency (demonstrations)
-- Strongest performance on higher floors with complex puzzles
-- Better generalization to unseen procedural layouts
-
-**Disadvantages:**
-- Most complex implementation requiring careful integration of components
-- Highest computational requirements
-- Multiple interacting hyperparameters requiring careful tuning
-
-## Evaluation
-
-In this section, we present a comprehensive evaluation of our reinforcement learning approaches for the Obstacle Tower Environment. Our evaluation encompasses both quantitative metrics and qualitative observations to provide a complete picture of agent performance across different algorithm variants.
-
-### Environment Configuration
-
-All experiments were conducted on the Obstacle Tower Environment v3.0, using a consistent set of random seeds for reproducibility. We trained agents for up to 2,500 episodes, with the following environment parameters:
-- Difficulty level: Easy (initial setting) with progressive difficulty increases in curriculum learning
-- Observation space: RGB frames (84x84) plus auxiliary information (keys, time remaining)
-- Action space: Discrete 4-dimensional action vector representing movement, camera, and interaction
 
 ### Algorithms and Variants
 
